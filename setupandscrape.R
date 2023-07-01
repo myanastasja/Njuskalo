@@ -50,7 +50,7 @@ for (i in 1:length(vauvauarticles)) {
 
 #Then go through regular articles
 
-###### This is in 2 loops instead of one as bindindg these two types of articles with c(,) creates "list" and gives following error
+###### This is in 2 loops instead of one as binding these two types of articles with c(,) creates "list" and gives following error
 ###### Error in UseMethod("xml_find_all") : no applicable method for 'xml_find_all' applied to an object of class "list"
 
 for (i in (length(vauvauarticles)+1):(length(vauvauarticles)+length(regulararticles))) {
@@ -72,4 +72,7 @@ for (i in (length(vauvauarticles)+1):(length(vauvauarticles)+length(regularartic
 }
 
 
-df <- data.frame(year, kilometers, fullprice, price_EUR, price_HRK, row.names = NULL)
+df <- data.frame(year, kilometers, fullprice, price_EUR, price_HRK, row.names = NULL) %>% arrange(price_EUR)
+
+inputyear <- 2017
+df[df$year == inputyear,]
