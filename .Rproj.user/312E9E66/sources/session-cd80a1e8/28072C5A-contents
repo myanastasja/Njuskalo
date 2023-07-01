@@ -5,9 +5,15 @@ library(xml2)      # Package to work with XML files
 
 
 #### SCRAPE - "skoda-octavia" to become input parameter in future upgrades
-myurl <- 'https://www.njuskalo.hr/auti/skoda-octavia'
 
-mypage <- read_html(myurl)
+##### Until I figure out how to deal with captcha, I will manually copy/paste page source code into a local file
+
+# myurl <- 'https://www.njuskalo.hr/auti/skoda-octavia'
+# myurl <- 'https://www.njuskalo.hr/auti/skoda-octavia?page=16'
+myurl <- "skoda-octavia-16.html" ##### THIS IS FALLBACK TO FILE
+
+
+ mypage <- read_html(myurl)
 
 vauvauarticles <- mypage %>%
   html_elements(css=".EntityList-item--VauVau .entity-body")
@@ -16,20 +22,30 @@ regulararticles <- mypage %>%
   html_elements(css=".EntityList-item--Regular .entity-body")
 
 #First go through Vau Vau articles
-price <- c()
+fullprice <- c()
+price_EUR <- c()
+price_HRK <- c()
+description <- c()
 kilometers <- c()
+year <- c()
 
 for (i in 1:length(vauvauarticles)) {
   
-  price <- c(price, html_text(html_nodes(vauvauarticles, css=".price")[i])) %>% 
+  fullprice[i] <- html_text(html_nodes(vauvauarticles, css=".price")[i]) %>% 
     trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]")
-  
-  description <- html_text(html_nodes(vauvauarticles, css=".entity-description-main")[i])
-  thiskilometers <- substring(trimws(description),1,unlist(gregexpr("\n",trimws(description))[1])-1)
-  kilometers <- c(kilometers, thiskilometers)
-  
-  print(price[i])
-  print(kilometers[i])
+  price_EUR[i] <- substr(fullprice[i], 1, unlist(gregexpr("€", fullprice[i]))[1]-2) %>% ifelse(is.na(unlist(gregexpr("\\,", .))[1]), ., substr(., 1, str_length(.)-3)) %>% as.numeric()*1000 
+  price_HRK[i] <- substr(fullprice[i], unlist(gregexpr("/", fullprice[i]))[1]+2, str_length(fullprice[i])-3) %>%
+    gsub("\\.", "", .) %>% gsub("\\,","", .) %>% as.numeric()/100
+
+  description[i] <- html_text(html_nodes(vauvauarticles, css=".entity-description-main")[i]) %>%
+    trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]")
+  kilometers[i] <- substring(description[i], 1, unlist(gregexpr("\n", description[i]))[1]-1) %>% 
+    substring(.,unlist(gregexpr(",", .))[1]+2,str_length(.)-3) %>%
+    strtoi()
+  year[i] <- substr(description[i], unlist(gregexpr("\n", description[i]))[1], unlist(gregexpr("\\.", description[i]))[1]) %>% 
+    trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]") %>%
+    substr(., unlist(gregexpr(":", .))[1]+2, str_length(.)-1)
+  print(year[i])
 }
 
 #Then go through regular articles
@@ -39,17 +55,21 @@ for (i in 1:length(vauvauarticles)) {
 
 for (i in (length(vauvauarticles)+1):(length(vauvauarticles)+length(regulararticles))) {
   
-  price <- c(price, html_text(html_nodes(regulararticles, css=".price")[i-length(vauvauarticles)])) %>% 
+  fullprice[i] <- html_text(html_nodes(regulararticles, css=".price")[i-length(vauvauarticles)]) %>% 
     trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]")
+  price_EUR[i] <- substr(fullprice[i], 1, unlist(gregexpr("€", fullprice[i]))[1]-2) %>% ifelse(is.na(unlist(gregexpr("\\,", .))[1]), ., substr(., 1, str_length(.)-3)) %>% as.numeric()*1000 
+  price_HRK[i] <- substr(fullprice[i], unlist(gregexpr("/", fullprice[i]))[1]+2, str_length(fullprice[i])-3) %>%
+    gsub("\\.", "", .) %>% gsub("\\,","", .) %>% as.numeric()/100
   
-  description <- html_text(html_nodes(regulararticles, css=".entity-description-main")[i-length(regulararticles)])
-  thiskilometers <- substring(trimws(description),1,unlist(gregexpr("\n",trimws(description))[1])-1)
-  kilometers <- c(kilometers, thiskilometers)
-  
-  print(price[i])
-  print(kilometers[i])
-  
+  description[i] <- html_text(html_nodes(regulararticles, css=".entity-description-main")[i-length(vauvauarticles)]) %>%
+    trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]")
+  kilometers[i] <- substring(description[i], 1, unlist(gregexpr("\n", description[i]))[1]-1) %>% 
+    substring(.,unlist(gregexpr(",", .))[1]+2,str_length(.)-3) %>%
+    strtoi()
+  year[i] <- substr(description[i], unlist(gregexpr("\n", description[i]))[1], unlist(gregexpr("\\.", description[i]))[1]) %>% 
+    trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]") %>%
+    substr(., unlist(gregexpr(":", .))[1]+2, str_length(.)-1)
 }
 
-df <- data.frame(price,row.names = NULL)
 
+df <- data.frame(year, kilometers, fullprice, price_EUR, price_HRK, row.names = NULL)

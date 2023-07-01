@@ -1,27 +1,27 @@
 {
-    "id": "28072C5A",
-    "path": "~/Documents/R Workspace/Education/Njuskalo/setupandscrape.R",
-    "project_path": "setupandscrape.R",
+    "id": "691F4983",
+    "path": "~/Documents/R Workspace/Education/Njuskalo/determineprice.R",
+    "project_path": "determineprice.R",
     "type": "r_source",
-    "hash": "1005508526",
+    "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1687094622822.0,
+    "created": 1688249444122.0,
     "source_on_save": false,
-    "relative_order": 1,
+    "relative_order": 8,
     "properties": {
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "74,17",
-        "scrollLine": "51"
+        "cursorPosition": "17,2",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1688249431,
+    "lastKnownWriteTime": 1688250503,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1688249431557,
+    "last_content_update": 1688250503261,
     "read_only": false,
     "read_only_alternatives": []
 }
