@@ -1,19 +1,3 @@
-#### SET UP
-library(tidyverse) # Load core Tidyverse packages, including dplyr
-library(rvest)     # Additional Tidyverse packages for web scraping
-library(xml2)      # Package to work with XML files
-
-
-#### SCRAPE - "skoda-octavia" to become input parameter in future upgrades
-
-##### Until I figure out how to deal with captcha, I will manually copy/paste page source code into a local file
-
-# myurl <- 'https://www.njuskalo.hr/auti/skoda-octavia'
-# myurl <- 'https://www.njuskalo.hr/auti/skoda-octavia?page=16'
-myurl <- "skoda-octavia-16.html" ##### THIS IS FALLBACK TO FILE
-
-
- mypage <- read_html(myurl)
 
 vauvauarticles <- mypage %>%
   html_elements(css=".EntityList-item--VauVau .entity-body")
