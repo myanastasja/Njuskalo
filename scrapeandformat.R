@@ -1,4 +1,17 @@
 
+
+fullprice <- c()
+price_EUR <- c()
+price_HRK <- c()
+kilometers <- c()
+year <- c()
+
+
+for (i in 0:maxpage) {
+
+ifelse(i=0, myurl <- mybaseurl, myurl <- str_c(mybaseurl, "?page=", i))
+mypage <- read_html(myurl)
+
 vauvauarticles <- mypage %>%
   html_elements(css=".EntityList-item--VauVau .entity-body")
 
@@ -6,30 +19,27 @@ regulararticles <- mypage %>%
   html_elements(css=".EntityList-item--Regular .entity-body")
 
 #First go through Vau Vau articles
-fullprice <- c()
-price_EUR <- c()
-price_HRK <- c()
-description <- c()
-kilometers <- c()
-year <- c()
 
 for (i in 1:length(vauvauarticles)) {
   
-  fullprice[i] <- html_text(html_nodes(vauvauarticles, css=".price")[i]) %>% 
+  fullprice <- c(fullprice,html_text(html_nodes(vauvauarticles, css=".price")[i])) %>% 
     trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]")
-  price_EUR[i] <- substr(fullprice[i], 1, unlist(gregexpr("€", fullprice[i]))[1]-2) %>% ifelse(is.na(unlist(gregexpr("\\,", .))[1]), ., substr(., 1, str_length(.)-3)) %>% as.numeric()*1000 
-  price_HRK[i] <- substr(fullprice[i], unlist(gregexpr("/", fullprice[i]))[1]+2, str_length(fullprice[i])-3) %>%
-    gsub("\\.", "", .) %>% gsub("\\,","", .) %>% as.numeric()/100
+  price_EUR <- c(price_EUR, substr(fullprice[i], 1, unlist(gregexpr("€", fullprice[i]))[1]-2)) %>% 
+    ifelse(is.na(unlist(gregexpr("\\,", .))[1]), ., substr(., 1, str_length(.)-3)) %>% 
+    as.numeric()*1000 
+  price_HRK <- c(price_HRK, substr(fullprice[i], unlist(gregexpr("/", fullprice[i]))[1]+2, str_length(fullprice[i])-3)) %>%
+    gsub("\\.", "", .) %>% 
+    gsub("\\,","", .) %>% 
+    as.numeric()/100
 
-  description[i] <- html_text(html_nodes(vauvauarticles, css=".entity-description-main")[i]) %>%
+  description <- html_text(html_nodes(vauvauarticles, css=".entity-description-main")[i]) %>%
     trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]")
-  kilometers[i] <- substring(description[i], 1, unlist(gregexpr("\n", description[i]))[1]-1) %>% 
+  kilometers <- c(kilometers, substring(description, 1, unlist(gregexpr("\n", description))[1]-1)) %>% 
     substring(.,unlist(gregexpr(",", .))[1]+2,str_length(.)-3) %>%
     strtoi()
-  year[i] <- substr(description[i], unlist(gregexpr("\n", description[i]))[1], unlist(gregexpr("\\.", description[i]))[1]) %>% 
+  year <- c(year, substr(description, unlist(gregexpr("\n", description))[1], unlist(gregexpr("\\.", description))[1])) %>% 
     trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]") %>%
     substr(., unlist(gregexpr(":", .))[1]+2, str_length(.)-1)
-  print(year[i])
 }
 
 #Then go through regular articles
@@ -39,24 +49,28 @@ for (i in 1:length(vauvauarticles)) {
 
 for (i in (length(vauvauarticles)+1):(length(vauvauarticles)+length(regulararticles))) {
   
-  fullprice[i] <- html_text(html_nodes(regulararticles, css=".price")[i-length(vauvauarticles)]) %>% 
+  fullprice <- c(fullprice, html_text(html_nodes(regulararticles, css=".price")[i-length(vauvauarticles)])) %>% 
     trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]")
-  price_EUR[i] <- substr(fullprice[i], 1, unlist(gregexpr("€", fullprice[i]))[1]-2) %>% ifelse(is.na(unlist(gregexpr("\\,", .))[1]), ., substr(., 1, str_length(.)-3)) %>% as.numeric()*1000 
-  price_HRK[i] <- substr(fullprice[i], unlist(gregexpr("/", fullprice[i]))[1]+2, str_length(fullprice[i])-3) %>%
-    gsub("\\.", "", .) %>% gsub("\\,","", .) %>% as.numeric()/100
+  price_EUR <- c(price_EUR, substr(fullprice[i], 1, unlist(gregexpr("€", fullprice[i]))[1]-2)) %>% 
+    ifelse(is.na(unlist(gregexpr("\\,", .))[1]), ., substr(., 1, str_length(.)-3)) %>% 
+    as.numeric()*1000 
+  price_HRK <- c(price_HRK, substr(fullprice[i], unlist(gregexpr("/", fullprice[i]))[1]+2, str_length(fullprice[i])-3)) %>%
+    gsub("\\.", "", .) %>% 
+    gsub("\\,","", .) %>% 
+    as.numeric()/100
   
-  description[i] <- html_text(html_nodes(regulararticles, css=".entity-description-main")[i-length(vauvauarticles)]) %>%
+  description <- html_text(html_nodes(regulararticles, css=".entity-description-main")[i-length(vauvauarticles)]) %>%
     trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]")
-  kilometers[i] <- substring(description[i], 1, unlist(gregexpr("\n", description[i]))[1]-1) %>% 
+  kilometers <- c(kilometers, substring(description, 1, unlist(gregexpr("\n", description))[1]-1)) %>% 
     substring(.,unlist(gregexpr(",", .))[1]+2,str_length(.)-3) %>%
     strtoi()
-  year[i] <- substr(description[i], unlist(gregexpr("\n", description[i]))[1], unlist(gregexpr("\\.", description[i]))[1]) %>% 
+  year <- c(year, substr(description, unlist(gregexpr("\n", description))[1], unlist(gregexpr("\\.", description))[1])) %>% 
     trimws(., which = c("both", "left", "right"), whitespace = "[ \t\r\n]") %>%
     substr(., unlist(gregexpr(":", .))[1]+2, str_length(.)-1)
 }
 
+}
 
 df <- data.frame(year, kilometers, fullprice, price_EUR, price_HRK, row.names = NULL) %>% arrange(price_EUR)
 
-inputyear <- 2017
-df[df$year == inputyear,]
+
