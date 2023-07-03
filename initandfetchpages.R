@@ -8,12 +8,12 @@ library(xml2)      # Package to work with XML files
 
 ##### Until I figure out how to deal with captcha, I will manually copy/paste page source code into a local file
 
-# mybaseurl <- 'https://www.njuskalo.hr/auti/skoda-octavia' 
+mybaseurl <- 'https://www.njuskalo.hr/auti/skoda-octavia'
 # myurl <- mybaseurl
 # myurl <- 'https://www.njuskalo.hr/auti/skoda-octavia?page=16'
-myurl <- "skoda-octavia.html" ##### THIS IS FALLBACK TO FILE
+# myurl <- "skoda-octavia.html" ##### THIS IS FALLBACK TO FILE
 
-mypage <- read_html(myurl)
+mypage <- read_html(mybaseurl)
 
 ### INITIAL PAGING CONTAINER
 paging <- mypage %>% 
@@ -42,7 +42,6 @@ ismaxpage <- function(paging) {
 }
   
 while(is.na(ismaxpage(paging)[1])) {
-  rm(myurl)
   myurl <- str_c(mybaseurl, "?page=", ismaxpage(paging)[2])
   
   rm(paging)
