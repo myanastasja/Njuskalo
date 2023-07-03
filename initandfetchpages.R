@@ -2,7 +2,8 @@
 library(tidyverse) # Load core Tidyverse packages, including dplyr
 library(rvest)     # Additional Tidyverse packages for web scraping
 library(xml2)      # Package to work with XML files
-
+library(htmltools) # save_html
+library(rio)
 
 #### SCRAPE - "skoda-octavia" to become input parameter in future upgrades
 
@@ -14,6 +15,14 @@ mybaseurl <- 'https://www.njuskalo.hr/auti/skoda-octavia'
 # myurl <- "skoda-octavia.html" ##### THIS IS FALLBACK TO FILE
 
 mypage <- read_html(mybaseurl)
+
+
+### Save html to file
+
+save_html(mypage, "/Users/anton/Documents/R Workspace/Education/Njuskalo/mypage_test.html", background = "white", libdir = "lib", lang = "en")
+browseURL(paste('file://', getwd(),'mypage_test.html', sep='/'))
+writeLines(toString(mypage), "mypage_test.html")
+
 
 ### INITIAL PAGING CONTAINER
 paging <- mypage %>% 
