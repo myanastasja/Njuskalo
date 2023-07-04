@@ -19,9 +19,9 @@ mypage <- read_html(mybaseurl)
 
 ### Save html to file
 
-save_html(mypage, "/Users/anton/Documents/R Workspace/Education/Njuskalo/mypage_test.html", background = "white", libdir = "lib", lang = "en")
-browseURL(paste('file://', getwd(),'mypage_test.html', sep='/'))
-writeLines(toString(mypage), "mypage_test.html")
+# save_html(mypage, "/Users/anton/Documents/R Workspace/Education/Njuskalo/mypage_test.html", background = "white", libdir = "lib", lang = "en")
+# browseURL(paste('file://', getwd(),'mypage_test.html', sep='/'))
+# writeLines(toString(mypage), "mypage_test.html")
 
 
 ### INITIAL PAGING CONTAINER

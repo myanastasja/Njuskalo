@@ -3,13 +3,15 @@ id <- c()
 fullprice <- c()
 price_EUR <- c()
 price_HRK <- c()
-description <- c()
 kilometers <- c()
 year <- c()
 
 
 for (i in 0:maxpage) {
   print(i)
+  waittime <- runif(1, 2, 8)
+  print(waittime)
+  Sys.sleep(waittime)
   ifelse(i==0, myurl <- mybaseurl, myurl <- str_c(mybaseurl, "?page=", i))
   mypage <- read_html(myurl)
 
@@ -39,7 +41,7 @@ for (i in 0:maxpage) {
       price_EURiter <- substr(fullpriceiter, 1, unlist(gregexpr("€", fullpriceiter))[1]-2) %>% 
         ifelse(unlist(gregexpr("\\,", .))[1]==-1, ., substr(., 1, str_length(.)-3)) %>% as.numeric()*1000 
       price_EUR <- c(price_EUR, price_EURiter)
-      price_HRKiter <- substr(fullpriceiter, unlist(gregexpr("/", fullprice[i]))[1]+2, str_length(fullpriceiter)-3) %>%
+      price_HRKiter <- substr(fullpriceiter, unlist(gregexpr("/", fullpriceiter))[1]+2, str_length(fullpriceiter)-3) %>%
         gsub("\\.", "", .) %>% gsub("\\,","", .) %>% as.numeric()/100
       price_HRK <- c(price_HRK, price_HRKiter)
       
@@ -73,7 +75,7 @@ for (i in 0:maxpage) {
       price_EURiter <- substr(fullpriceiter, 1, unlist(gregexpr("€", fullpriceiter))[1]-2) %>% 
         ifelse(unlist(gregexpr("\\,", .))[1]==-1, ., substr(., 1, str_length(.)-3)) %>% as.numeric()*1000 
       price_EUR <- c(price_EUR, price_EURiter)
-      price_HRKiter <- substr(fullpriceiter, unlist(gregexpr("/", fullprice[i]))[1]+2, str_length(fullpriceiter)-3) %>%
+      price_HRKiter <- substr(fullpriceiter, unlist(gregexpr("/", fullpriceiter))[1]+2, str_length(fullpriceiter)-3) %>%
         gsub("\\.", "", .) %>% 
         gsub("\\,","", .) %>% 
         as.numeric()/100
@@ -97,4 +99,11 @@ df <- data.frame(id, year, kilometers, fullprice, price_EUR, price_HRK, row.name
   arrange(price_EUR) %>% 
   distinct()
 
+
+for (i in 0:maxpage) {
+  print(i)
+  waittime <- runif(1, 2, 8)
+  print(waittime)
+  Sys.sleep(waittime)
+}
 
