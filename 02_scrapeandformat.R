@@ -99,11 +99,11 @@ df <- data.frame(id, year, kilometers, fullprice, price_EUR, price_HRK, row.name
   arrange(price_EUR) %>% 
   distinct()
 
-
-for (i in 0:maxpage) {
-  print(i)
-  waittime <- runif(1, 2, 8)
-  print(waittime)
-  Sys.sleep(waittime)
-}
+# 
+# for (i in 0:maxpage) {
+#   print(i)
+#   waittime <- runif(1, 2, 8)
+#   print(waittime)
+#   Sys.sleep(waittime)
+# }
 
